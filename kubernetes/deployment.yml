@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fast-food-api
+  labels:
+    app: fast-food-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fast-food-api
+  template:
+    metadata:
+      labels:
+        app: fast-food-api
+    spec:
+      containers:
+        - name: fast-food-api-container
+          image: leandrocamara/fast-food-api:latest
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: fast-food-api-configmap
+            - secretRef:
+                name: fast-food-api-secret
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /heartbeat
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 30
+            periodSeconds: 60
