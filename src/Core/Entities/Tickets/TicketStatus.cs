@@ -18,8 +18,8 @@ public readonly struct TicketStatus
 
     private enum ETicketStatus : short
     {
-        Received = 2,
-        Preparing = 3,
-        Ready = 4
+        Received = 1,
+        Preparing = 2,
+        Ready = 3
     }
 }
