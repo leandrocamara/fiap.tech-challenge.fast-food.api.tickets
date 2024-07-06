@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fast-food-api
+  name: fast-food-tickets-api
   labels:
-    app: fast-food-api
+    app: fast-food-tickets-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: fast-food-api
+      app: fast-food-tickets-api
   template:
     metadata:
       labels:
-        app: fast-food-api
+        app: fast-food-tickets-api
     spec:
       containers:
-        - name: fast-food-api-container
-          image: leandrocamara/fast-food-api:latest
+        - name: fast-food-tickets-api-container
+          image: leandrocamara/fast-food-tickets-api:latest
           resources:
             limits:
               memory: "128Mi"
@@ -25,9 +25,9 @@ spec:
             - containerPort: 8080
           envFrom:
             - configMapRef:
-                name: fast-food-api-configmap
+                name: fast-food-tickets-api-configmap
             - secretRef:
-                name: fast-food-api-secret
+                name: fast-food-tickets-api-secret
           readinessProbe:
             tcpSocket:
               port: 8080
