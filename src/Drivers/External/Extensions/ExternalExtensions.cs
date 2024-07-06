@@ -1,5 +1,7 @@
 ﻿using Adapters.Gateways.Orders;
+using Adapters.Gateways.Tickets;
 using External.Clients;
+using External.Persistence.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +14,8 @@ public static class ExternalExtensions
         this IServiceCollection services, IConfiguration configuration)
     {
         // TODO: Configure AWS DynamoDB
+
+        services.AddScoped<ITicketRepository, TicketRepository>();
 
         services.AddScoped<IOrderClient, OrderClient>();
 
