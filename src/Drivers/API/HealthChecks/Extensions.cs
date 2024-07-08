@@ -6,17 +6,6 @@ namespace API.HealthChecks;
 
 public static class Extensions
 {
-    public static IServiceCollection AddCustomHealthChecks(this IServiceCollection services)
-    {
-        services
-            .AddHealthChecks()
-            .AddCheck<DbHealthCheck>(
-                name: "db_health_check",
-                tags: new List<string> { "database", "healthcheck" });
-
-        return services;
-    }
-
     public static void UseCustomHealthChecks(this IApplicationBuilder builder)
     {
         builder

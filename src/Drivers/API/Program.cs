@@ -29,7 +29,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.CreateDatabase(configuration);
+    using (var scope = app.Services.CreateScope())
+        app.CreateDatabase(scope.ServiceProvider);
+        
+    
+    
 }
 
 app.UseCustomHealthChecks();
