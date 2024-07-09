@@ -1,0 +1,33 @@
+﻿version: '3.9'
+
+networks:
+  dev:
+    driver: bridge
+
+services:
+  dynamodb:
+    image: amazon/dynamodb-local
+    container_name: fastfood_dynamodb
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-s", "http://localhost:8000/shell/"]
+      interval: 10s
+      retries: 5
+    networks:
+      - dev
+ 
+  api:
+    build: .
+    container_name: fastfood_tickets_api
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__Default=http://dynamodb:8000      
+    depends_on:
+      dynamodb:
+        condition: service_healthy
+    networks:
+      - dev

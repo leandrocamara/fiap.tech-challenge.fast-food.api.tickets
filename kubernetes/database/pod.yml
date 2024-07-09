@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fast-food-database
+  labels:
+    app: fast-food-database
+spec:
+  volumes:
+    - name: pgdata-storage
+      persistentVolumeClaim:
+        claimName: pgdata-pv-volume2
+  containers:
+    - name: fast-food-database-container
+      image: postgres:latest
+      resources:
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+      ports:
+        - containerPort: 5432
+      volumeMounts:
+        - mountPath: "/var/lib/postgresql/data"
+          name: pgdata-storage 
+      envFrom:
+        - secretRef:
+            name: fast-food-database-secret
