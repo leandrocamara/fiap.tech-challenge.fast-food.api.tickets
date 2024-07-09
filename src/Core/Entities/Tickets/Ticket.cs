@@ -38,5 +38,7 @@ public sealed class Ticket : Entity, IAggregatedRoot
         { TicketStatus.Preparing(), TicketStatus.Ready() }
     };
 
+    public bool IsItemsEmpty() => TicketItems.Any();
+
     private static readonly IValidator<Ticket> Validator = new TicketValidator();
 }

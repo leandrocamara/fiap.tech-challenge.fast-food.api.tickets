@@ -2,6 +2,7 @@
 using Adapters.Gateways.Orders;
 using Adapters.Gateways.Tickets;
 using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
 using External.Clients;
 using External.HealthChecks;
 using External.Persistence;
@@ -24,6 +25,7 @@ public static class ExternalExtensions
         services.AddAWSService<IAmazonDynamoDB>(awsOptions);
         services.AddSingleton<IDynamoDbDatabaseContext, TicketDynamoDbDatabaseContext>();
         services.AddSingleton<DatabaseContextInitializer>();
+        services.AddSingleton(new DynamoDBContextConfig { Conversion = DynamoDBEntryConversion.V2 });
 
         services.AddScoped<ITicketRepository, TicketRepository>();
 
