@@ -6,6 +6,7 @@ public class TicketItemValidator : IValidator<TicketItem>
 {
     public bool IsValid(TicketItem instance, out string error)
     {
-        throw new NotImplementedException();
+        error = "Quantity must be greater than zero";
+        return instance.IsNotNegative();
     }
 }

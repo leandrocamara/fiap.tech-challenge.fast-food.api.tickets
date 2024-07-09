@@ -7,7 +7,6 @@ public class TicketItem : Entity
 {
     public Product Product { get; private set; }
     public short Quantity { get; private set; }
-
     public TicketItem(Product product, short quantity)
     {
         Id = Guid.NewGuid();
@@ -17,6 +16,8 @@ public class TicketItem : Entity
         if (Validator.IsValid(this, out var error) is false)
             throw new DomainException(error);
     }
+
+    public bool IsNotNegative() => Quantity < 0;
 
     private static readonly IValidator<TicketItem> Validator = new TicketItemValidator();
 }

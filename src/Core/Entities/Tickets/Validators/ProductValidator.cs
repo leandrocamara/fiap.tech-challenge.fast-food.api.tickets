@@ -6,6 +6,7 @@ public class ProductValidator  : IValidator<Product>
 {
     public bool IsValid(Product instance, out string error)
     {
-        throw new NotImplementedException();
+        error = string.Empty;
+        return true;
     }
 }
