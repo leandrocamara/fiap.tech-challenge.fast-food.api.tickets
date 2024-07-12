@@ -1,15 +1,21 @@
-﻿using Adapters.Gateways.Orders;
+﻿using Adapters.Gateways;
+using Adapters.Gateways.Orders;
 using Adapters.Gateways.Tickets;
+using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
 using Amazon;
 using Amazon.Runtime;
 using Amazon.SQS;
 using External.Clients;
+using External.HealthChecks;
+using External.Persistence;
 using External.HostedServices.Consumers;
 using External.Persistence.Repositories;
-using External.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+
 
 namespace External.Extensions;
 
@@ -18,15 +24,23 @@ public static class ExternalExtensions
     public static IServiceCollection AddExternalDependencies(
         this IServiceCollection services, IConfiguration configuration)
     {
-        // TODO: Configure AWS DynamoDB
+        var awsOptions = configuration.GetAWSOptions();        
+        services.AddDefaultAWSOptions(awsOptions);
+        services.AddAWSService<IAmazonDynamoDB>(awsOptions);
+        services.AddSingleton<IDynamoDbDatabaseContext, TicketDynamoDbDatabaseContext>();
+        services.AddSingleton<DatabaseContextInitializer>();
+        services.AddSingleton(new DynamoDBContextConfig { Conversion = DynamoDBEntryConversion.V2 });
 
         services.AddScoped<ITicketRepository, TicketRepository>();
 
         services.AddScoped<IOrderClient, OrderClient>();
 
-        SetupAmazonSqs(services, configuration);
-
         return services;
+    }
+
+    public static void CreateDatabase(this IApplicationBuilder _, IServiceProvider serviceProvider)
+    {   
+        serviceProvider.GetService<DatabaseContextInitializer>();
     }
 
     private static void SetupAmazonSqs(IServiceCollection services, IConfiguration configuration)
@@ -65,8 +79,13 @@ public static class ExternalExtensions
         return settings;
     }
 
-    public static void CreateDatabase(this IApplicationBuilder _, IConfiguration configuration)
+    public static IServiceCollection AddCustomHealthChecks(this IServiceCollection services)
     {
-        // TODO: Create on AWS DynamoDB
+        services.AddHealthChecks()
+            .AddCheck<DbHealthCheck>(
+                name: "db_health_check",
+                tags: new List<string> { "database", "healthcheck" });
+
+        return services;
     }
 }

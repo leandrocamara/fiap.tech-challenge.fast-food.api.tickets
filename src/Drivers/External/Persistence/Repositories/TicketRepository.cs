@@ -1,15 +1,11 @@
 ﻿using Adapters.Gateways.Tickets;
+using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
 using Entities.Tickets;
 
 namespace External.Persistence.Repositories;
 
-public class TicketRepository : ITicketRepository
+public class TicketRepository(IAmazonDynamoDB dynamoDbClient) : BaseRepository<Ticket>(dynamoDbClient), ITicketRepository
 {
-    public Task Add(Ticket entity) => throw new NotImplementedException();
-
-    public Task Update(Ticket entity) => throw new NotImplementedException();
-
-    public Task Delete(Ticket entity) => throw new NotImplementedException();
-
-    public Task<Ticket?> GetById(Guid id) => throw new NotImplementedException();
+    
 }
