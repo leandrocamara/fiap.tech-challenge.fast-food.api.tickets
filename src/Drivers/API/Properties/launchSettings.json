@@ -14,9 +14,13 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5179",
+      "applicationUrl": "http://localhost:5002",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AmazonSqsSettings__Region": "us-east-1",
+        "AmazonSqsSettings__AccessKey": "",
+        "AmazonSqsSettings__SecretKey": "",
+        "AmazonSqsSettings__SessionToken": ""
       }
     },
     "https": {
@@ -24,7 +28,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:7169;http://localhost:5179",
+      "applicationUrl": "https://localhost:8083;http://localhost:5002",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

@@ -9,10 +9,10 @@ services:
     build: .
     container_name: fastfood_tickets_api
     ports:
-      - "8080:8080"
+      - "5002:5002"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTP_PORTS=5002
     depends_on:
       database:
         condition: service_healthy
