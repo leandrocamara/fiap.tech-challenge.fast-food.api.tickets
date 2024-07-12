@@ -1,5 +1,4 @@
-﻿using Adapters.Gateways;
-using Adapters.Gateways.Orders;
+﻿using Adapters.Gateways.Orders;
 using Adapters.Gateways.Tickets;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
@@ -7,14 +6,13 @@ using Amazon;
 using Amazon.Runtime;
 using Amazon.SQS;
 using External.Clients;
-using External.HealthChecks;
 using External.Persistence;
 using External.HostedServices.Consumers;
 using External.Persistence.Repositories;
+using External.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 
 namespace External.Extensions;
@@ -34,6 +32,8 @@ public static class ExternalExtensions
         services.AddScoped<ITicketRepository, TicketRepository>();
 
         services.AddScoped<IOrderClient, OrderClient>();
+
+        SetupAmazonSqs(services, configuration);
 
         return services;
     }
@@ -77,15 +77,5 @@ public static class ExternalExtensions
             throw new ArgumentException($"{nameof(AmazonSqsSettings)} not found.");
 
         return settings;
-    }
-
-    public static IServiceCollection AddCustomHealthChecks(this IServiceCollection services)
-    {
-        services.AddHealthChecks()
-            .AddCheck<DbHealthCheck>(
-                name: "db_health_check",
-                tags: new List<string> { "database", "healthcheck" });
-
-        return services;
     }
 }

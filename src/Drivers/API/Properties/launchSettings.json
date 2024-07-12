@@ -8,7 +8,11 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "AWS__ServiceURL": "http://localhost:8000",
         "AWS__Profile": "default",
-        "AWS__Region": "us-east-1"
+        "AWS__Region": "us-east-1",
+        "AmazonSqsSettings__Region": "us-east-1",
+        "AmazonSqsSettings__AccessKey": "",
+        "AmazonSqsSettings__SecretKey": "",
+        "AmazonSqsSettings__SessionToken": ""
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5179"
