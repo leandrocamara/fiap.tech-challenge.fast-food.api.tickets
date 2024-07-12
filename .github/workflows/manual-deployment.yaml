@@ -1,0 +1,73 @@
+name: Manual Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      awsAccessKey:
+        description: 'AWS Academy - AWS_ACCESS_KEY_ID'
+        required: false
+        type: string
+      awsSecretAccessKey:
+        description: 'AWS Academy - AWS_SECRET_ACCESS_KEY'
+        required: false
+        type: string
+      awsSessionToken:
+        description: 'AWS Academy - AWS_SESSION_TOKEN'
+        required: false
+        type: string
+      dbEndpoint:
+        description: 'DB Endpoint (without Port)'
+        required: false
+        type: string
+
+jobs:
+  CD:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t ${{ vars.DOCKERHUB_USERNAME }}/fast-food-tickets-api:latest .
+
+      - name: Log into Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push image to Docker Hub
+        run: docker push ${{ vars.DOCKERHUB_USERNAME }}/fast-food-tickets-api:latest
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ github.event.inputs.awsAccessKey || secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ github.event.inputs.awsSecretAccessKey || secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ github.event.inputs.awsSessionToken || secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Configure kubectl
+        run: |
+          aws eks update-kubeconfig --name ${{ vars.AWS_CLUSTER_NAME }} --region ${{ vars.AWS_REGION }}
+
+      - name: Replace Tokens
+        uses: cschleiden/replace-tokens@v1
+        with:
+          tokenPrefix: '#{'
+          tokenSuffix: '}#'
+          files: '["kubernetes/configmap.yml", "kubernetes/secret.yml"]'
+        env:
+          ENVIRONMENT: ${{ vars.ENVIRONMENT }}
+          DB_ENDPOINT: ${{ github.event.inputs.dbEndpoint || secrets.DB_ENDPOINT }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+
+      - name: Deploy to AWS EKS
+        run: kubectl apply -f ./kubernetes/.
