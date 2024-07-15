@@ -37,7 +37,7 @@ public class Ticket : Entity, IAggregatedRoot
         status = TicketStatus.Received();
         TicketItems = ticketItems.ToList();
         CreatedAt = UpdatedAt = DateTime.UtcNow;
-        TicketStatusString = Status.ToString();
+        TicketStatusString = status.ToString();
         if (Validator.IsValid(this, out var error) is false)
             throw new DomainException(error);
     }
