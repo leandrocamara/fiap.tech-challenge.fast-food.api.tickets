@@ -7,9 +7,9 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",        
         "AmazonSettings__Region": "us-east-1",
-        "AmazonSettings__AccessKey": "ASIASD6WCQPCZMOOQQMG",
-        "AmazonSettings__SecretKey": "nh76eXVPpH8vEKvL6Ltm5Wpj6Sv1ZL1tZtk9miSF",
-        "AmazonSettings__SessionToken": "IQoJb3JpZ2luX2VjEOb//////////wEaCXVzLXdlc3QtMiJGMEQCIH3GjNlSj5PsJYyQX4AlCIocXyDe5Ya77CbP8UYNGa0AAiAkYOC0UN9woVFUt62YrESURd8wqzf7XdQO9Qlg0KfE+Cq5Agiv//////////8BEAAaDDE0NTk0MDk3MjQ4NSIMN9asLBbB+BKX7LKsKo0CKPLnApU8KGt8zKfxI84lbg7uqRGmfxid9uoVCn5gSTE1qVZ6k7UFnyE0jvNnqWKNkX+E5cDTjAUrpmYLvh7/MPGDYN/cAMslOIx8/VPpF8i1dYLgZSMeDLNpbeEVC6ORuEn8Zfo4LZtluoHDQV1tSGyieYrlvbO/AnaJgF2pjZ8bO+6kNm1kCN/LmRJccRW/ySBbVw3R4nvSg4dck/vxl3+/8cUuzuaXRgnRAfDs8hK/jT7S8owr5isOp4V79D89aQ3HH2hWKlbOWBFJgDu9vJ6rnUDd1qMlawN5uoaeg9uf5+dR47gnUSi94vlOSzDuyW0Jqqe32lysB4WzDKkqeNj/5DS2Tn05/odNlMkwiojRtAY6ngEA5mkNYHSqofR1OkOxDwa1RLKpmdWYL3doJWgaM23pFloRzP6vEx0+QquKlzFuPwEeEmNWgU9IfhctW51QF15AJGeM7OGZFh+hZQf1EcJtWXvDyUXLqx6vkBSXQ0elMeds+JumLNMOysIg9oK5XIPyYmSkDcfKHSNw3ECz1K9J1/qr7sn4LUDB/BHFkroXDrDsVLICEZ7JWm5aXsoRWw=="
+        "AmazonSettings__AccessKey": "",
+        "AmazonSettings__SecretKey": "",
+        "AmazonSettings__SessionToken": ""
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5179"
