@@ -1,8 +1,9 @@
-﻿using Entities.SeedWork;
+﻿using Amazon.DynamoDBv2.DataModel;
+using Entities.SeedWork;
 using Entities.Tickets.Validators;
 
 namespace Entities.Tickets;
-
+[DynamoDBTable("tickes_table")]
 public class TicketItem : Entity
 {
     public Product Product { get; private set; }

@@ -13,6 +13,8 @@ using External.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Amazon.Extensions.NETCore.Setup;
+
 
 
 namespace External.Extensions;
@@ -21,19 +23,15 @@ public static class ExternalExtensions
 {
     public static IServiceCollection AddExternalDependencies(
         this IServiceCollection services, IConfiguration configuration)
-    {
-        var awsOptions = configuration.GetAWSOptions();        
-        services.AddDefaultAWSOptions(awsOptions);
-        services.AddAWSService<IAmazonDynamoDB>(awsOptions);
-        services.AddSingleton<IDynamoDbDatabaseContext, TicketDynamoDbDatabaseContext>();
-        services.AddSingleton<DatabaseContextInitializer>();
-        services.AddSingleton(new DynamoDBContextConfig { Conversion = DynamoDBEntryConversion.V2 });
+    {  
 
         services.AddScoped<ITicketRepository, TicketRepository>();
-
         services.AddScoped<IOrderClient, OrderClient>();
 
-        SetupAmazonSqs(services, configuration);
+        var amazonSettings = GetAmazonSettings(configuration);
+        SetupAmazonSqs(services, amazonSettings);
+        SetupAmazonDynamoDb(services, amazonSettings);
+        
 
         return services;
     }
@@ -43,9 +41,30 @@ public static class ExternalExtensions
         serviceProvider.GetService<DatabaseContextInitializer>();
     }
 
-    private static void SetupAmazonSqs(IServiceCollection services, IConfiguration configuration)
+    private static void SetupAmazonDynamoDb(IServiceCollection services, AmazonSettings settings)
     {
-        var settings = GetAmazonSqsSettings(configuration);
+        var credentials = new SessionAWSCredentials(settings.AccessKey, settings.SecretKey, settings.SessionToken);
+        var region = RegionEndpoint.GetBySystemName(settings.Region);
+
+        var awsOptions = new AWSOptions
+        {
+            Credentials = credentials,
+            Region = region
+        };
+
+        services.AddDefaultAWSOptions(awsOptions);
+
+        services.AddSingleton<IDynamoDBContext,DynamoDBContext>();
+        var client = new AmazonDynamoDBClient(credentials, region);
+        
+        services.AddSingleton<IAmazonDynamoDB>(client);
+        services.AddSingleton<IDynamoDbDatabaseContext, TicketDynamoDbDatabaseContext>();
+        services.AddSingleton<DatabaseContextInitializer>();
+        services.AddSingleton(new DynamoDBContextConfig { Conversion = DynamoDBEntryConversion.V2 });
+    }
+
+    private static void SetupAmazonSqs(IServiceCollection services, AmazonSettings settings)
+    { 
 
         services.AddSingleton<IAmazonSQS>(_ => new AmazonSQSClient(
             new SessionAWSCredentials(settings.AccessKey, settings.SecretKey, settings.SessionToken),
@@ -57,7 +76,7 @@ public static class ExternalExtensions
     public static IHealthChecksBuilder AddSqsHealthCheck(
         this IHealthChecksBuilder builder, IConfiguration configuration)
     {
-        var settings = GetAmazonSqsSettings(configuration);
+        var settings = GetAmazonSettings(configuration);
 
         return builder.AddSqs(options =>
         {
@@ -69,12 +88,12 @@ public static class ExternalExtensions
         }, name: "sqs_health_check", tags: new[] { "sqs", "healthcheck" });
     }
 
-    private static AmazonSqsSettings GetAmazonSqsSettings(IConfiguration configuration)
+    private static AmazonSettings GetAmazonSettings(IConfiguration configuration)
     {
-        var settings = configuration.GetSection(nameof(AmazonSqsSettings)).Get<AmazonSqsSettings>();
+        var settings = configuration.GetSection(nameof(AmazonSettings)).Get<AmazonSettings>();
 
         if (settings is null)
-            throw new ArgumentException($"{nameof(AmazonSqsSettings)} not found.");
+            throw new ArgumentException($"{nameof(AmazonSettings)} not found.");
 
         return settings;
     }

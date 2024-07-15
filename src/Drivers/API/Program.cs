@@ -31,8 +31,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     using (var scope = app.Services.CreateScope())
         app.CreateDatabase(scope.ServiceProvider);
-        
-    
     
 }
 

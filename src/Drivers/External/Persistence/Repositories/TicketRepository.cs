@@ -5,7 +5,7 @@ using Entities.Tickets;
 
 namespace External.Persistence.Repositories;
 
-public class TicketRepository(IAmazonDynamoDB dynamoDbClient) : BaseRepository<Ticket>(dynamoDbClient), ITicketRepository
+public class TicketRepository(IDynamoDBContext context) : BaseRepository<Ticket>(context), ITicketRepository
 {
     
 }

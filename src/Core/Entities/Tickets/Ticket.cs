@@ -1,10 +1,13 @@
-﻿using Entities.SeedWork;
+﻿using Amazon.DynamoDBv2.DataModel;
+using Entities.SeedWork;
 using Entities.Tickets.Validators;
 
 namespace Entities.Tickets;
 
+[DynamoDBTable("tickes_table")]
 public sealed class Ticket : Entity, IAggregatedRoot
 {
+    [DynamoDBRangeKey("sk")]
     public Guid OrderId { get; private set; }
     public TicketStatus Status { get; private set; }
     public DateTime CreatedAt { get; private set; }

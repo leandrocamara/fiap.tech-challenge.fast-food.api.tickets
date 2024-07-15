@@ -1,6 +1,6 @@
 ﻿namespace External.Settings;
 
-public class AmazonSqsSettings
+public class AmazonSettings
 {
     public string Region { get; set; }
     public string AccessKey { get; set; }

@@ -5,18 +5,12 @@ using Entities.SeedWork;
 
 namespace External.Persistence.Repositories
 {
-    public abstract class BaseRepository<T> : IRepository<T> where T : class, IAggregatedRoot
+    public abstract class BaseRepository<T>(IDynamoDBContext context) : IRepository<T> where T : class, IAggregatedRoot
     {
-        private readonly DynamoDBContext _context;
-
-        protected BaseRepository(IAmazonDynamoDB dynamoDbClient)
-        {
-            _context = new DynamoDBContext(dynamoDbClient);
-        }
-
-        public async Task Add(T entity) => await _context.SaveAsync<T>(entity);    
-        public async Task Delete(T entity) => await _context.DeleteAsync<T>(entity);        
-        public async Task<T?> GetById(Guid id) => await _context.LoadAsync<T?>(id);        
-        public async Task Update(T entity) => await _context.SaveAsync<T>(entity);               
+        
+        public async Task Add(T entity) => await context.SaveAsync<T>(entity);    
+        public async Task Delete(T entity) => await context.DeleteAsync<T>(entity);        
+        public async Task<T?> GetById(Guid id) => await context.LoadAsync<T?>(id);        
+        public async Task Update(T entity) => await context.SaveAsync<T>(entity);               
     }
 }
