@@ -2,5 +2,5 @@
 
 public interface IOrderClient
 {
-    Task UpdateStatusOrder(Guid orderId, int orderStatus);
+    Task UpdateStatusOrder(Guid orderId, string ticketStatus);
 }

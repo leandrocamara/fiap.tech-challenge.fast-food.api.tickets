@@ -7,4 +7,3 @@ metadata:
 data:
   ASPNETCORE_ENVIRONMENT: "#{ENVIRONMENT}#"
   ASPNETCORE_HTTP_PORTS: "8080"
-  OrdersApiSettings__BaseAddress: "#{ORDERS_API_URL}#"

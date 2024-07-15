@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;
 
-builder.Services.AddCustomHealthChecks();
+builder.Services.AddCustomHealthChecks(configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => {
     c.EnableAnnotations();
@@ -31,8 +31,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     using (var scope = app.Services.CreateScope())
         app.CreateDatabase(scope.ServiceProvider);
-        
-    
     
 }
 

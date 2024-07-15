@@ -1,12 +1,22 @@
 ﻿using Adapters.Gateways.Orders;
+using Amazon.SQS;
+using Amazon.SQS.Model;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace External.Clients;
 
-public class OrderClient : IOrderClient
+public class OrderClient(IAmazonSQS sqsClient, ILogger<OrderClient> logger) : IOrderClient
 {
-    public Task UpdateStatusOrder(Guid orderId, int orderStatus)
+    private const string QueueName = "ticket-updated";
+
+    public Task UpdateStatusOrder(Guid orderId, string ticketStatus)
     {
-        // TODO: HTTP or Messaging
-        throw new NotImplementedException();
+        var message = JsonConvert.SerializeObject(new TicketUpdated(orderId, ticketStatus));
+        logger.LogInformation("Publishing message: {Text}", message);
+
+        return sqsClient.SendMessageAsync(new SendMessageRequest { QueueUrl = QueueName, MessageBody = message });
     }
 }
+
+public record TicketUpdated(Guid OrderId, string TicketStatus);

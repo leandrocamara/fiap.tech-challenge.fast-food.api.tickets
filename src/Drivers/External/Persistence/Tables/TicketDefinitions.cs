@@ -8,8 +8,8 @@ namespace External.Persistence.Tables
 {
     internal class TicketDefinitions
     {
-        public static readonly string TABLE_NAME = "FastFood.Tickets";
-        public static readonly string PARTITION_KEY = "PartitionKey";
-        public static readonly string SORT_KEY = "SortKey";
+        public static readonly string TABLE_NAME = "tickets_table";
+        public static readonly string PARTITION_KEY = "pk";
+        public static readonly string SORT_KEY = "sk";
     }
 }

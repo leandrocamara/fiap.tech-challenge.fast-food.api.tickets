@@ -1,24 +1,43 @@
-﻿using Entities.SeedWork;
+﻿using Amazon.DynamoDBv2.DataModel;
+using Entities.SeedWork;
 using Entities.Tickets.Validators;
 
 namespace Entities.Tickets;
 
-public sealed class Ticket : Entity, IAggregatedRoot
+[DynamoDBTable("tickets_table")]
+public class Ticket : Entity, IAggregatedRoot
 {
+
+    [DynamoDBRangeKey("sk")]
     public Guid OrderId { get; private set; }
-    public TicketStatus Status { get; private set; }
+
+    [DynamoDBIgnore]
+
+    private TicketStatus status;
+    [DynamoDBIgnore]
+    public TicketStatus Status
+    {
+        get { return TicketStatusString; }
+        private set { status = value; }
+    }
+
+    
+    
+
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
-    public IEnumerable<TicketItem> TicketItems { get; private set; }
+    public List<TicketItem> TicketItems { get; private set; }
+    public string TicketStatusString { get; private set; }
 
+    public Ticket() { }
     public Ticket(Guid orderId, IEnumerable<TicketItem> ticketItems)
     {
         Id = Guid.NewGuid();
         OrderId = orderId;
-        Status = TicketStatus.Received();
-        TicketItems = ticketItems;
+        status = TicketStatus.Received();
+        TicketItems = ticketItems.ToList();
         CreatedAt = UpdatedAt = DateTime.UtcNow;
-
+        TicketStatusString = Status.ToString();
         if (Validator.IsValid(this, out var error) is false)
             throw new DomainException(error);
     }
@@ -27,7 +46,7 @@ public sealed class Ticket : Entity, IAggregatedRoot
     {
         if (StatusSequence.TryGetValue(Status, out var nextStatus))
         {
-            Status = nextStatus;
+            TicketStatusString = nextStatus;
             UpdatedAt = DateTime.UtcNow;
         }
     }
@@ -38,7 +57,7 @@ public sealed class Ticket : Entity, IAggregatedRoot
         { TicketStatus.Preparing(), TicketStatus.Ready() }
     };
 
-    public bool IsItemsEmpty() => TicketItems.Any();
+    public bool IsItemsNotEmpty() => TicketItems.Any();
 
     private static readonly IValidator<Ticket> Validator = new TicketValidator();
 }

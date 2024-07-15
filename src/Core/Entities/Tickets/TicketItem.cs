@@ -1,12 +1,15 @@
-﻿using Entities.SeedWork;
+﻿using Amazon.DynamoDBv2.DataModel;
+using Entities.SeedWork;
 using Entities.Tickets.Validators;
 
 namespace Entities.Tickets;
-
-public class TicketItem : Entity
+[DynamoDBTable("tickes_table")]
+public class TicketItem
 {
+    public Guid Id { get; protected set; }
     public Product Product { get; private set; }
     public short Quantity { get; private set; }
+    public TicketItem() { }
     public TicketItem(Product product, short quantity)
     {
         Id = Guid.NewGuid();
@@ -17,7 +20,7 @@ public class TicketItem : Entity
             throw new DomainException(error);
     }
 
-    public bool IsNotNegative() => Quantity < 0;
+    public bool IsNotNegative() => Quantity > 0;
 
     private static readonly IValidator<TicketItem> Validator = new TicketItemValidator();
 }

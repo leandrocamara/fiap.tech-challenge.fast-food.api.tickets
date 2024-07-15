@@ -12,6 +12,13 @@ public readonly struct TicketStatus
     public static implicit operator TicketStatus(short value) => new((ETicketStatus)value);
     public static implicit operator string(TicketStatus status) => status.ToString();
 
+    public static implicit operator TicketStatus(string value) => value switch
+    {
+        "Received" => Received(),
+        "Preparing" => Preparing(),
+        "Ready" => Ready(),
+        _ => throw new ArgumentException($"Unknown status: {value}")
+    };
     public override string ToString() => Value.ToString();
 
     private TicketStatus(ETicketStatus status) => Value = status;

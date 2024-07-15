@@ -19,7 +19,7 @@ public class TicketRouter(ITicketController controller) : BaseRouter
         return HttpResponse(result);
     }
 
-    [HttpPut("{id}/status")]
+    [HttpPut("{orderId}/status")]
     [SwaggerResponse(StatusCodes.Status200OK)]
     [SwaggerResponse(StatusCodes.Status404NotFound)]
     [SwaggerResponse(StatusCodes.Status500InternalServerError)]

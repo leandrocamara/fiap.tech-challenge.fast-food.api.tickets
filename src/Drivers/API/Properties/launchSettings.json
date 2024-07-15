@@ -6,9 +6,10 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "AWS__ServiceURL": "http://localhost:8000",
-        "AWS__Profile": "default",
-        "AWS__Region": "us-east-1"
+        "AmazonSettings__Region": "us-east-1",
+        "AmazonSettings__AccessKey": "ASIASD6WCQPCXDE3JC2Q",
+        "AmazonSettings__SecretKey": "SO9b6LJTuLsmefFhI9WP6UaYW0nlzqI1Gdgscm5B",
+        "AmazonSettings__SessionToken": "IQoJb3JpZ2luX2VjEPn//////////wEaCXVzLXdlc3QtMiJHMEUCIQCqWos43FoBZybInx5gk1YsSYbDrEX+tw42weVUpB5nbAIgMltF3pyWrvHQIkWZ9I9k1Ewu4rDMjRfsa7O+DQtmD5IquQIIwv//////////ARAAGgwxNDU5NDA5NzI0ODUiDE8y4+XNcArRp1MlfCqNAoEoPWHfJILgJOxzQP1P2B1bOanK6e99MmHkLX5E+ARbESCfy3w/8pQVnx8vSNO4y0N/QO9MJIFuRoV6Sh3YZ7SNQI6u4nshfrGfARHtk5U7SQbyEHdaOG7mQiVAQprk1Q7Egr/5YFCe8peYmUjCvY3UIzmUESdndc/6HKFWgjUkRHJnZfxEiAHXRshdeQdrdPoeemPxYaO/FI+0XLR76sCFy2h8ckLkYkSU71QvxXY3cvNiubmSJi0+fS9uwrNlUtKk+TIpS3xiMj9GcaWv+22V+oIJVDkCLgrg/Zkb68m8vHBhcH9yVFLh/05/RWnopeMmaaE1qESqZglBMJOK0Ud5KqxfDMMGLB/JrcidMN2u1bQGOp0Bh7IaYfbXhGxJOfErkLU0b1ZyNgcuN9FJpqqJ8bMcgsaLESu1R0bMHdTKKZm5JU+ICfEgstbGeD0UKkH+IbEoYNTDW62VjYLMt6FIE5dCIyLUiV5/n3lVStvOBTldHA+1Izlb1bmvWAjQR4dKNbJsEhERlb0BrwlYKKURJhKQypD5VVRUkIAfzgmr6YXB2yBFsUeMaRCGsuiVYHE/iw=="
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5179"
