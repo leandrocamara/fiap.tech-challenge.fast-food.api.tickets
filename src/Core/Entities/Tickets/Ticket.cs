@@ -5,23 +5,28 @@ using Entities.Tickets.Validators;
 namespace Entities.Tickets;
 
 [DynamoDBTable("tickes_table")]
-public sealed class Ticket : Entity, IAggregatedRoot
+public  class Ticket : Entity, IAggregatedRoot
 {
+
     [DynamoDBRangeKey("sk")]
     public Guid OrderId { get; private set; }
+
+    [DynamoDBIgnore] 
     public TicketStatus Status { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
-    public IEnumerable<TicketItem> TicketItems { get; private set; }
+    public List<TicketItem> TicketItems { get; private set; }
+    public string TicketStatusString { get; private set; }
 
+    public Ticket() { }
     public Ticket(Guid orderId, IEnumerable<TicketItem> ticketItems)
     {
         Id = Guid.NewGuid();
         OrderId = orderId;
         Status = TicketStatus.Received();
-        TicketItems = ticketItems;
+        TicketItems = ticketItems.ToList();
         CreatedAt = UpdatedAt = DateTime.UtcNow;
-
+        TicketStatusString = Status.ToString();
         if (Validator.IsValid(this, out var error) is false)
             throw new DomainException(error);
     }
@@ -41,7 +46,7 @@ public sealed class Ticket : Entity, IAggregatedRoot
         { TicketStatus.Preparing(), TicketStatus.Ready() }
     };
 
-    public bool IsItemsEmpty() => TicketItems.Any();
+    public bool IsItemsNotEmpty() => TicketItems.Any();
 
     private static readonly IValidator<Ticket> Validator = new TicketValidator();
 }

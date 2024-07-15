@@ -1,14 +1,20 @@
-﻿using Entities.SeedWork;
+﻿using Amazon.DynamoDBv2.DataModel;
+using Entities.SeedWork;
 using Entities.Tickets.Validators;
 
 namespace Entities.Tickets;
-
-public readonly struct Product
+[DynamoDBTable("tickes_table")]
+public  class Product
 {
-    public Guid Id { get; }
-    public string Name { get; }
-    public string Category { get; }
-    public string Description { get; }
+    public Guid Id { get; protected set; }
+  
+    public string Name { get; set; }
+    
+    public string Category { get; set; }
+    
+    public string Description { get; set; }
+
+    public Product() { }
 
     public Product(Guid id, string name, string category, string description)
     {
