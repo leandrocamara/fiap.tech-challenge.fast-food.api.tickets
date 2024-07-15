@@ -3,7 +3,7 @@ using Entities.SeedWork;
 using Entities.Tickets.Validators;
 
 namespace Entities.Tickets;
-[DynamoDBTable("tickes_table")]
+[DynamoDBTable("tickets_table")]
 public  class Product
 {
     public Guid Id { get; protected set; }

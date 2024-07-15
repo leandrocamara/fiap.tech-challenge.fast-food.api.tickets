@@ -4,15 +4,26 @@ using Entities.Tickets.Validators;
 
 namespace Entities.Tickets;
 
-[DynamoDBTable("tickes_table")]
-public  class Ticket : Entity, IAggregatedRoot
+[DynamoDBTable("tickets_table")]
+public class Ticket : Entity, IAggregatedRoot
 {
 
     [DynamoDBRangeKey("sk")]
     public Guid OrderId { get; private set; }
 
-    [DynamoDBIgnore] 
-    public TicketStatus Status { get; private set; }
+    [DynamoDBIgnore]
+
+    private TicketStatus status;
+    [DynamoDBIgnore]
+    public TicketStatus Status
+    {
+        get { return TicketStatusString; }
+        private set { status = value; }
+    }
+
+    
+    
+
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
     public List<TicketItem> TicketItems { get; private set; }
@@ -23,7 +34,7 @@ public  class Ticket : Entity, IAggregatedRoot
     {
         Id = Guid.NewGuid();
         OrderId = orderId;
-        Status = TicketStatus.Received();
+        status = TicketStatus.Received();
         TicketItems = ticketItems.ToList();
         CreatedAt = UpdatedAt = DateTime.UtcNow;
         TicketStatusString = Status.ToString();
@@ -35,7 +46,7 @@ public  class Ticket : Entity, IAggregatedRoot
     {
         if (StatusSequence.TryGetValue(Status, out var nextStatus))
         {
-            Status = nextStatus;
+            TicketStatusString = nextStatus;
             UpdatedAt = DateTime.UtcNow;
         }
     }

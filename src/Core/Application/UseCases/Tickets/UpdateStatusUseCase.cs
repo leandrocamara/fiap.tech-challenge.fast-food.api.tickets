@@ -13,7 +13,7 @@ public sealed class UpdateStatusUseCase(
     {
         try
         {
-            var ticket = await ticketGateway.GetById(request.Id);
+            var ticket = await ticketGateway.GetById(request.OrderId);
 
             if (ticket == null)
                 throw new ApplicationException("Ticket not found");
@@ -32,4 +32,4 @@ public sealed class UpdateStatusUseCase(
     }
 }
 
-public record UpdateStatusRequest(Guid Id);
+public record UpdateStatusRequest(Guid OrderId);

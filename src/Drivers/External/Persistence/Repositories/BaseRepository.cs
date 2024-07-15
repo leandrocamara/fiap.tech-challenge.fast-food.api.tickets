@@ -10,7 +10,7 @@ namespace External.Persistence.Repositories
         
         public async Task Add(T entity) => await context.SaveAsync<T>(entity);    
         public async Task Delete(T entity) => await context.DeleteAsync<T>(entity);        
-        public async Task<T?> GetById(Guid id) => await context.LoadAsync<T?>(id);        
+        public async Task<T?> GetById(Guid pk, Guid sk) => await context.LoadAsync<T?>(pk, sk);        
         public async Task Update(T entity) => await context.SaveAsync<T>(entity);               
     }
 }
