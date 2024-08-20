@@ -71,12 +71,13 @@ jobs:
           tokenSuffix: '}#'
           files: '["kubernetes/configmap.yml", "kubernetes/secret.yml"]'
         env:
+          # kubernetes/configmap.yml
           ENVIRONMENT: ${{ vars.ENVIRONMENT }}
-          DB_ENDPOINT: ${{ secrets.DB_ENDPOINT }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+          # kubernetes/secret.yml
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
 
       - name: Deploy to AWS EKS
         run: kubectl apply -f ./kubernetes/.
