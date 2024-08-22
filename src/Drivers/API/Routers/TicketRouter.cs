@@ -19,13 +19,13 @@ public class TicketRouter(ITicketController controller) : BaseRouter
         return HttpResponse(result);
     }
 
-    [HttpPut("{orderId}/status")]
-    [SwaggerResponse(StatusCodes.Status200OK)]
+    [HttpPut("{orderId:guid}/status")]
+    [SwaggerResponse(StatusCodes.Status200OK, "", typeof(UpdateStatusResponse))]
     [SwaggerResponse(StatusCodes.Status404NotFound)]
     [SwaggerResponse(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateStatus(UpdateStatusRequest request)
+    public async Task<IActionResult> UpdateStatus([FromRoute] Guid orderId)
     {
-        var result = await controller.UpdateStatus(request);
+        var result = await controller.UpdateStatus(new UpdateStatusRequest(orderId));
         return HttpResponse(result);
     }
 }
