@@ -10,19 +10,33 @@ O Tech Challenge Grupo 19 é composto por:
 
 
 ## Tecnologias
-* [.NET 8.0](https://dotnet.microsoft.com/pt-br/download/dotnet/8.0)
+* [ .NET 8.0 ](https://dotnet.microsoft.com/pt-br/download/dotnet/8.0)
 * [ Entity Framework Core 8.0 ](https://devblogs.microsoft.com/dotnet/announcing-ef8/)
 * [ OpenAPI - Swashbuckle ](https://learn.microsoft.com/pt-br/aspnet/core/tutorials/getting-started-with-swashbuckle)
 * [ FluentMigrator ](https://fluentmigrator.github.io/)
 * [ Postgresql ](https://www.postgresql.org/)
+* [ Amazon SQS ](https://aws.amazon.com/pt/sqs/)
 
 
 ## Arquitetura
 **Tickets API** faz parte de uma solução composta por outras aplicações: [_Orders API_](https://github.com/leandrocamara/fiap.tech-challenge.fast-food.api.orders) e [_Payments API_](https://github.com/leandrocamara/fiap.tech-challenge.fast-food.api.payments).
 
-Estas três aplicações são executadas no _AWS EKS_ e se comunicam via _HTTP_ e por mensagens via _AWS SQS_.
+Estas três aplicações são executadas no _AWS EKS_ e se comunicam via _HTTP_ e por mensagens via _Amazon SQS_.
 
-![Arquitetura](./docs/DiagramaArquitetura.png)
+### SAGA Coreografada
+
+Neste projeto, foi adotado o padrão **SAGA Coreografada** para gerenciar as transações distribuídas entre os microsserviços.
+Optamos pela SAGA Coreografada ao invés da versão orquestrada, principalmente por três razões:
+
+1. **Simplicidade de Implementação:** A SAGA Coreografada se alinha melhor à nossa necessidade de uma arquitetura mais simples e direta. Não há a necessidade de um serviço centralizado para orquestrar as transações, o que reduz a complexidade de infraestrutura.
+
+2. **Menor Quantidade de Serviços:** Como não temos um orquestrador dedicado, conseguimos minimizar a quantidade de serviços no ecossistema, o que facilita a manutenção e monitoramento do sistema.
+
+3. **Desacoplamento entre Microsserviços:** Cada microsserviço é responsável por suas próprias ações e escuta os eventos nas filas do _Amazon SQS_ (`payment-updated`, `ticket-created`, `ticket-updated` e `order-status-updated`). Essa abordagem permite que cada serviço responda autonomamente aos eventos, garantindo maior flexibilidade e escalabilidade.
+
+Embora a SAGA Orquestrada ofereça mais controle centralizado, nossa decisão foi baseada na busca por uma solução mais simples, com menos pontos de falha e maior autonomia entre os microsserviços.
+
+![Arquitetura](./docs/DiagramaArquitetura.jpg)
 
 A aplicação baseia-se na _Clean Architecture_. Para a camada _Entities_, foi adotado o _Domain Driven Design_.
 Segue a estrutura da aplicação:
@@ -78,15 +92,14 @@ Para acessar o _Swagger_ da aplicação, é possível obter a URL no **Console d
 
 ### CLI
 
-O projeto pode ser executado utilizando o Docker.
-Para iniciar a aplicação e banco de dados separadamente, siga os passos abaixo.
-
-Para subir o BD local, o recomendado é utilizar o Docker e executar o seguinte comando:
-```shell
-
+No arquivo `launchSettings.json`, preencher as seguintes variáveis, com as credenciais do AWS (Academy):
+```json
+{
+  "AmazonSettings__AccessKey": "",
+  "AmazonSettings__SecretKey": "",
+  "AmazonSettings__SessionToken": ""
+}
 ```
-
-Obs.: A *connection string* do BD local já está configurada corretamente no arquivo *launchSettings.json*. Contudo, espera-se que as credenciais da AWS sejam incluídas no arquivo, para o funcionamento com o AWS SQS.
 
 Inicie a Aplicação (API):
 ```shell
@@ -94,12 +107,6 @@ dotnet run --project .\src\Drivers\API\API.csproj
 ```
 
 Swagger UI da API: `http://localhost:5000/swagger` (***Recomendado para testar as chamadas aos endpoints***)
-
-Caso seja necessário derrubar o BD local, basta executar:
-
-```shell
-
-```
 
 
 ## Como testar

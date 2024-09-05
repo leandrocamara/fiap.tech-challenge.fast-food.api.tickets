@@ -65,7 +65,8 @@
 							"    pm.collectionVariables.set(\"customerId\", customer.id);\r",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -133,7 +134,8 @@
 							"    pm.collectionVariables.set(\"orderId\", order.id);\r",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -249,14 +251,14 @@
 				"method": "PUT",
 				"header": [],
 				"url": {
-					"raw": "{{tickets}}/api/tickets/<TICKET_ID>/status",
+					"raw": "{{tickets}}/api/tickets/{{orderId}}/status",
 					"host": [
 						"{{tickets}}"
 					],
 					"path": [
 						"api",
 						"tickets",
-						"<TICKET_ID>",
+						"{{orderId}}",
 						"status"
 					]
 				}
